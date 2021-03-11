@@ -1,18 +1,15 @@
 package core;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
 import model.Color;
 import model.Status;
 import model.Worker;
-
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public class ManageCollection {
-    public static void main(String[] args)  {
+
+    private void show_as_works() {
+
         Worker worker1 = WorkerFabric.create("a",1.0f, 2, 902930,
                 LocalDate.now(), new Date(), Status.FIRED, 188, 90,
                 Color.BLACK);
@@ -38,11 +35,34 @@ public class ManageCollection {
         collection.insert(worker4);
         collection.insert(worker5);
         collection.insert(worker6);
+        collection.info();
         collection.show();
         collection.save("collection.xml");
 
+    }
+
+    public static void main(String[] args)  {
+        ManageCollection manageCollection = new ManageCollection();
+
+        if (args != null && args.length > 0 && args[0].equals("test")) {
+            manageCollection.show_as_works();
+        } else {
+            manageCollection.load_from_cmd(args);
+        }
+    }
+
+    public void load_from_cmd(String[] args) {
+        String loadFile;
+        if (args != null && args.length > 0 && args[0].endsWith(".xml")) {
+            loadFile = args[0];
+        } else {
+            throw new IllegalArgumentException("File not found or is not xml");
+        }
         WorkerCollection savedCollection = new WorkerCollection();
-        savedCollection.load("collection.xml");
+        savedCollection.load(loadFile);
+        savedCollection.info();
         savedCollection.show();
     }
 }
+
+

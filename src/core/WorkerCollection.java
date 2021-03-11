@@ -4,8 +4,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import core.interfaces.InterfaceWorkerCollection;
 import model.Worker;
-
-import javax.xml.bind.Element;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,7 +21,6 @@ public class WorkerCollection implements InterfaceWorkerCollection {
     }
 
 
-
     @Override
     public void info() {
         System.out.println("Worker Collection properties");
@@ -33,11 +30,12 @@ public class WorkerCollection implements InterfaceWorkerCollection {
 
     @Override
     public void show() {
-        System.out.println("===========");
-        for(Map.Entry<Long, Worker> entry : workers.entrySet())
+        System.out.println("___________");
+        for (Map.Entry<Long, Worker> entry : workers.entrySet()) {
             System.out.format("key: %d, worker: %s\n", entry.getKey(), entry.getValue());
         }
-
+        System.out.println("===========");
+    }
 
     @Override
     public void insert(Worker worker) {
@@ -62,12 +60,14 @@ public class WorkerCollection implements InterfaceWorkerCollection {
     @Override
     public void save(String filename)  {
         XStream xstream = new XStream(new StaxDriver());
+        Class<?>[] classes = new Class[] { Worker.class, WorkerCollection.class};
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypes(classes);
         xstream.alias("worker", Worker.class);
         xstream.alias("workers", WorkerCollection.class);
         xstream.addImplicitCollection(WorkerCollection.class, "workers");
-        String outputFileName = "collection.xml";
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
             xstream.toXML(this, writer);
         }
         catch (IOException e) {
@@ -76,17 +76,24 @@ public class WorkerCollection implements InterfaceWorkerCollection {
     }
 
 
-
-
-
-
-
-
-
-
     @Override
     public void  load(String filename){
-
+        XStream xstream = new XStream(new StaxDriver());
+        Class<?>[] classes = new Class[] { Worker.class, WorkerCollection.class};
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypes(classes);
+        xstream.alias("worker", Worker.class);
+        xstream.alias("workers", WorkerCollection.class);
+        xstream.addImplicitCollection(WorkerCollection.class, "workers");
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            WorkerCollection workerCollection = (WorkerCollection) xstream.fromXML(reader);
+            this.workers = workerCollection.workers;
+            this.initData = workerCollection.initData;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -169,6 +176,8 @@ public class WorkerCollection implements InterfaceWorkerCollection {
         }
     }
 }
+
+
 
 
 
