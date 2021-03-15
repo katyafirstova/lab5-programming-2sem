@@ -20,5 +20,5 @@ public interface InterfaceWorkerCollection {
     public void removeLower(Worker worker);
     public void removeAllByEndDate(Worker worker);
     public void removeAnyByStartDate(Worker worker);
-    public void printEndDate(OutputStream output, Date endDate);
+    public void printEndDate(Date endDate);
 }

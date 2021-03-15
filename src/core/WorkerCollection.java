@@ -160,7 +160,7 @@ public class WorkerCollection implements InterfaceWorkerCollection {
     }
 
     @Override
-    public void printEndDate(OutputStream output, Date endDate) {
+    public void printEndDate(Date endDate) {
         ArrayList<Date> dates = new ArrayList<Date>();
         for (Worker worker : workers.values()) {
             dates.add(worker.getEndDate());
