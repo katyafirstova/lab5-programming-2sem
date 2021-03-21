@@ -4,6 +4,7 @@ import model.Worker;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDate;
 import java.util.Date;
 
 public interface InterfaceWorkerCollection {
@@ -16,9 +17,9 @@ public interface InterfaceWorkerCollection {
     public void save(String filename) throws IOException;
     public void load(String filename);
     public void executeScript(String filename);
-    public void removeGreater(Worker worker);
-    public void removeLower(Worker worker);
-    public void removeAllByEndDate(Worker worker);
-    public void removeAnyByStartDate(Worker worker);
+    public void removeGreater(int salary);
+    public void removeLower(int salary);
+    public void removeAllByEndDate(Date endDate);
+    public void removeAnyByStartDate(LocalDate startDate);
     public void printEndDate(Date endDate);
 }

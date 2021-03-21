@@ -33,6 +33,12 @@ public class Worker {
         this.person = person;
     }
 
+    public Worker() {
+        this.id = (long) (Math.random()*max);
+        this.creationDate = LocalDateTime.now();
+
+    }
+
     @Override
     public String toString() {
         return "Worker{" +
@@ -87,7 +93,7 @@ public class Worker {
         if(salary < 0 ) {
             throw new IllegalArgumentException("Can't be less than 0");
         }
-        if(salary == null){
+        if(salary == null) {
             throw new NullPointerException("Can't be null");
         }
         this.salary = salary;
@@ -102,6 +108,10 @@ public class Worker {
             throw new NullPointerException("Can't be null");
         }
         this.startDate = startDate;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Date getEndDate() {
@@ -127,4 +137,6 @@ public class Worker {
     public void setPerson(Person person) {
         this.person = person;
     }
+
+
 }

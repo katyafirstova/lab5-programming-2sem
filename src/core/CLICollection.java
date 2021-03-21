@@ -1,15 +1,14 @@
 package core;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 import model.Color;
 import model.Status;
 import model.Worker;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.Scanner;
+import java.util.*;
 
 import static core.CommandCollection.*;
 
@@ -22,7 +21,7 @@ public class CLICollection {
     }
 
 
-    public void analyse(String cmd, Worker worker, String filename) {
+    public void analyse(String cmd) {
 
 
         switch (CommandCollection.fromCmd(cmd)) {
@@ -30,95 +29,205 @@ public class CLICollection {
             case HELP:
                 for (CommandCollection s : CommandCollection.values()) {
                     if (s != UNKNOWN) {
-                        System.out.println(s);
+                        System.out.println(s.getCommand() + ": " + s.getDescription());
                     }
                 }
-                history.add(HELP.getCommand());
+                addAndSaveHistory(HELP.getCommand());
                 break;
 
             case CLEAR:
                 collection.clear();
-                history.add(CLEAR.getCommand());
+                addAndSaveHistory(CLEAR.getCommand());
                 break;
 
             case INSERT:
-                collection.insert(worker);
-                history.add(INSERT.getCommand());
+
+                collection.insert(createWorker());
+                addAndSaveHistory(INSERT.getCommand());
                 break;
 
             case UPDATE_ID:
-                collection.update(worker.getId(), worker);
-                history.add(UPDATE_ID.getCommand());
+                Worker updateWorker = updateWorker();
+                collection.update(updateWorker.getId(), updateWorker);
+                addAndSaveHistory(UPDATE_ID.getCommand());
                 break;
 
             case SHOW:
                 collection.show();
-                history.add(SHOW.getCommand());
+                addAndSaveHistory(SHOW.getCommand());
                 break;
 
             case SAVE:
+                String filename = createFilename();
                 collection.save(filename);
-                history.add(SAVE.getCommand());
+                addAndSaveHistory(SAVE.getCommand());
                 break;
 
             case REMOVE_LOWER:
-                collection.removeLower(worker);
-                history.add(REMOVE_LOWER.getCommand());
+                collection.removeLower(getRemoveSalary());
+                addAndSaveHistory(REMOVE_LOWER.getCommand());
                 break;
 
             case REMOVE_GREATER:
-                collection.removeGreater(worker);
-                history.add(REMOVE_GREATER.getCommand());
+                collection.removeGreater(getRemoveSalary());
+                addAndSaveHistory(REMOVE_GREATER.getCommand());
                 break;
 
             case REMOVE_KEY:
-                collection.removeKey(worker.getId());
-                history.add(REMOVE_KEY.getCommand());
+                collection.removeKey(getRemoveKey());
+                addAndSaveHistory(REMOVE_KEY.getCommand());
                 break;
 
             case REMOVE_ALL_BY_START_DATE:
-                collection.removeAnyByStartDate(worker);
-                history.add(REMOVE_ALL_BY_START_DATE.getCommand());
+                collection.removeAnyByStartDate(getStartDate());
+                addAndSaveHistory(REMOVE_ALL_BY_START_DATE.getCommand());
                 break;
 
             case REMOVE_ALL_BY_END_DATE:
-                collection.removeAllByEndDate(worker);
-                history.add(REMOVE_ALL_BY_END_DATE.getCommand());
+                collection.removeAllByEndDate(getEndDate());
+                addAndSaveHistory(REMOVE_ALL_BY_END_DATE.getCommand());
                 break;
 
             case PRINT_FIELD_DESCENDING_END_DATE:
-                collection.printEndDate(worker.getEndDate());
-                history.add(PRINT_FIELD_DESCENDING_END_DATE.getCommand());
+                collection.printEndDate(getWorker().getEndDate());
+                addAndSaveHistory(PRINT_FIELD_DESCENDING_END_DATE.getCommand());
                 break;
 
             case INFO:
                 collection.info();
-                history.add(INSERT.getCommand());
+                addAndSaveHistory(INSERT.getCommand());
                 break;
 
             case EXIT:
                 System.exit(0);
-                history.add(EXIT.getCommand());
+                addAndSaveHistory(EXIT.getCommand());
                 break;
 
             case HISTORY:
-                // todo: цикл
+                showHistory();
+                break;
+
+            case UNKNOWN:
+                System.out.println(UNKNOWN.getDescription());
+                break;
 
         }
     }
 
-    public void start()  {
+    private void showHistory() {
+        for (int i = 0; i < history.size(); i++) {
+            String hist = history.get(i);
+            if (!hist.equals(UNKNOWN)) {
+                System.out.println(hist);
 
-        InputStream stream = System.in;
-        Scanner console = new Scanner(stream);
-        String line = console.nextLine();
+            }
+        }
+    }
+
+    private void addAndSaveHistory(String command) {
+        history.add(command);
+        XStream xstream = new XStream(new StaxDriver());
+        xstream.alias("history", ArrayList.class);
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("history.xml"));
+            xstream.toXML(this, writer);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private Date getEndDate() {
+        WorkerAsker workerAsker = new WorkerAsker();
+        return workerAsker.askEndDate();
+    }
+
+    private LocalDate getStartDate() {
+        WorkerAsker workerAsker = new WorkerAsker();
+        return workerAsker.askStartDate();
+    }
+
+    private Worker updateWorker() {
+        Worker worker = createWorker();
+        WorkerAsker workerAsker = new WorkerAsker();
+        worker.setId(workerAsker.askId());
+
+        return worker;
+    }
+
+    private long getRemoveKey() {
+        WorkerAsker workerAsker = new WorkerAsker();
+        return workerAsker.askKey();
+    }
+
+    private int getRemoveSalary() {
+        WorkerAsker workerAsker = new WorkerAsker();
+        return workerAsker.askSalary();
+    }
+
+    private long getId() {
+
+        WorkerAsker workerAsker = new WorkerAsker();
+        return workerAsker.askId();
+    }
+
+    private Worker createWorker() {
+
+        WorkerAsker workerAsker = new WorkerAsker();
+        String name = workerAsker.askName();
+        float x = workerAsker.askX();
+        int y = workerAsker.askY();
+        float height = workerAsker.askHeight();
+        int weight = workerAsker.askWeight();
+        Status status = workerAsker.askStatus();
+        Color color = workerAsker.askColor();
+        int salary = workerAsker.askSalary();
+        LocalDate newStartDate = workerAsker.askStartDate();
+        Date newEndDate = workerAsker.askEndDate();
+        Worker worker = WorkerFabric.create(name, x, y, salary,  newStartDate, newEndDate, status, height, weight, color);
+        System.out.format("Создан элемент коллекции: %s\n", worker);
+
+        return worker;
+    }
+
+    private String createFilename() {
+        WorkerAsker workerAsker = new WorkerAsker();
+
+        return workerAsker.askFileName();
+    }
+
+    private Worker getWorker() {
+        return new Worker();
+    }
+
+    public void start() {
+
+        for (; ; ) {
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                String line = bufferedReader.readLine();
+                analyse(line);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
         }
+    }
 
 
 
-}
+
+
+
+
+    }
+
+
+
+
 
 
 

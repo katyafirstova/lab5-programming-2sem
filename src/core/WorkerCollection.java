@@ -103,42 +103,46 @@ public class WorkerCollection implements InterfaceWorkerCollection {
     }
 
     @Override
-    public void removeGreater(Worker worker) {
+    public void removeGreater(int salary) {
         Iterator<Map.Entry<Long, Worker>> workerIterator = workers.entrySet().iterator();
         while (workerIterator.hasNext()) {
             Map.Entry<Long, Worker> entry = workerIterator.next();
             Worker w = entry.getValue();
-            long curId = w.getId();
-            long id = worker.getId();
-            if (curId > id) {
-                workers.remove(curId);
+            int curSalary = w.getSalary();
+            Worker worker = new Worker();
+            salary = worker.getSalary();
+            if (curSalary > salary) {
+                workers.remove(curSalary);
             }
         }
     }
 
 
     @Override
-    public void removeLower(Worker worker) {
+    public void removeLower(int salary) {
         Iterator<Map.Entry<Long, Worker>> workerIterator = workers.entrySet().iterator();
         while (workerIterator.hasNext()) {
             Map.Entry<Long, Worker> entry = workerIterator.next();
             Worker w = entry.getValue();
-            long curId = w.getId();
-            long id = worker.getId();
-            if (curId < id) {
+            int curSalary = w.getSalary();
+            Worker worker = new Worker();
+            salary = worker.getSalary();
+            if (curSalary < salary) {
                 workerIterator.remove();
             }
         }
     }
 
     @Override
-    public void removeAllByEndDate(Worker worker) {
+    public void removeAllByEndDate(Date endDate) {
+        if(endDate == null)
+            throw new IllegalArgumentException("Поле endDate не может быть пустым!");
         Iterator<Map.Entry<Long, Worker>> workerIterator = workers.entrySet().iterator();
         while (workerIterator.hasNext()) {
             Map.Entry<Long, Worker> entry = workerIterator.next();
             Worker w = entry.getValue();
             Date curEndDate = w.getEndDate();
-            if (curEndDate.getTime() == worker.getEndDate().getTime()) {
+            if (curEndDate.getTime() == endDate.getTime()) {
                 workerIterator.remove();
             }
         }
@@ -146,13 +150,13 @@ public class WorkerCollection implements InterfaceWorkerCollection {
 
 
     @Override
-    public void removeAnyByStartDate(Worker worker) {
+    public void removeAnyByStartDate(LocalDate startDate) {
         Iterator<Map.Entry<Long, Worker>> workerIterator = workers.entrySet().iterator();
         while (workerIterator.hasNext()) {
             Map.Entry<Long, Worker> entry = workerIterator.next();
             Worker w = entry.getValue();
             LocalDate curStartDate = w.getStartDate();
-            if (curStartDate.isEqual(worker.getStartDate())) {
+            if (curStartDate.isEqual(startDate)) {
                 workerIterator.remove();
             }
         }
