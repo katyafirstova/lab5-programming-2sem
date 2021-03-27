@@ -3,9 +3,9 @@ package model;
 import core.CommandCollection;
 
 public enum Color {
-    BLACK("черный"),
-    WHITE("белый"),
-    BROWN("коричневый");
+    BLACK("black"),
+    WHITE("white"),
+    BROWN("brown");
 
     private String name;
 

@@ -95,7 +95,7 @@ public class CLICollection {
 
             case INFO:
                 collection.info();
-                addAndSaveHistory(INSERT.getCommand());
+                addAndSaveHistory(INFO.getCommand());
                 break;
 
             case EXIT:
@@ -107,11 +107,32 @@ public class CLICollection {
                 showHistory();
                 break;
 
+            case EXECUTE_SCRIPT:
+                executeScript();
+                break;
+
             case UNKNOWN:
                 System.out.println(UNKNOWN.getDescription());
                 break;
 
         }
+    }
+
+    private void executeScript() {
+        XStream xstream = new XStream(new StaxDriver());
+        XStream.setupDefaultSecurity(xstream);
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("history.xml"));
+            ArrayList<String> script = (ArrayList<String>) xstream.fromXML(reader);
+            for (int i = 0; i < script.size(); i++) {
+                analyse(script.get(i));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void showHistory() {
@@ -127,10 +148,9 @@ public class CLICollection {
     private void addAndSaveHistory(String command) {
         history.add(command);
         XStream xstream = new XStream(new StaxDriver());
-        xstream.alias("history", ArrayList.class);
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("history.xml"));
-            xstream.toXML(this, writer);
+            xstream.toXML(history, writer);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -216,12 +236,6 @@ public class CLICollection {
 
         }
     }
-
-
-
-
-
-
 
     }
 

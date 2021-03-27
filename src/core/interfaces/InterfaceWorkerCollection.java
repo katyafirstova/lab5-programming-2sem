@@ -16,7 +16,6 @@ public interface InterfaceWorkerCollection {
     public void clear();
     public void save(String filename) throws IOException;
     public void load(String filename);
-    public void executeScript(String filename);
     public void removeGreater(int salary);
     public void removeLower(int salary);
     public void removeAllByEndDate(Date endDate);

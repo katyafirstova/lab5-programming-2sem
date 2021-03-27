@@ -1,11 +1,11 @@
 package model;
 
 public enum Status {
-    FIRED("уволен"),
-    HIRED("приянт на работу"),
-    RECOMMENDED_FOR_PROMOTION("рекомендован к повышению"),
-    REGULAR("постоянный работник"),
-    PROBATION("испытательный срок");
+    FIRED("fired"),
+    HIRED("hired"),
+    RECOMMENDED_FOR_PROMOTION("recommended for promotion"),
+    REGULAR("regular"),
+    PROBATION("probation");
 
     String name;
 

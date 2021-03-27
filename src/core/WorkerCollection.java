@@ -26,6 +26,7 @@ public class WorkerCollection implements InterfaceWorkerCollection {
         System.out.println("Worker Collection properties");
         System.out.format("Initialisation data: %s\n", this.initData);
         System.out.format("Count of elements: %d\n", workers.size());
+        System.out.format("Type of collection: %s\n", workers.getClass());
     }
 
     @Override
@@ -97,10 +98,6 @@ public class WorkerCollection implements InterfaceWorkerCollection {
 
     }
 
-    @Override
-    public void executeScript(String filename) {
-
-    }
 
     @Override
     public void removeGreater(int salary) {
@@ -109,10 +106,8 @@ public class WorkerCollection implements InterfaceWorkerCollection {
             Map.Entry<Long, Worker> entry = workerIterator.next();
             Worker w = entry.getValue();
             int curSalary = w.getSalary();
-            Worker worker = new Worker();
-            salary = worker.getSalary();
             if (curSalary > salary) {
-                workers.remove(curSalary);
+                workerIterator.remove();
             }
         }
     }
@@ -125,8 +120,6 @@ public class WorkerCollection implements InterfaceWorkerCollection {
             Map.Entry<Long, Worker> entry = workerIterator.next();
             Worker w = entry.getValue();
             int curSalary = w.getSalary();
-            Worker worker = new Worker();
-            salary = worker.getSalary();
             if (curSalary < salary) {
                 workerIterator.remove();
             }
@@ -135,19 +128,21 @@ public class WorkerCollection implements InterfaceWorkerCollection {
 
     @Override
     public void removeAllByEndDate(Date endDate) {
-        if(endDate == null)
+        if (endDate == null)
             throw new IllegalArgumentException("Поле endDate не может быть пустым!");
         Iterator<Map.Entry<Long, Worker>> workerIterator = workers.entrySet().iterator();
         while (workerIterator.hasNext()) {
             Map.Entry<Long, Worker> entry = workerIterator.next();
             Worker w = entry.getValue();
             Date curEndDate = w.getEndDate();
-            if (curEndDate.getTime() == endDate.getTime()) {
+
+            final long difference = curEndDate.getTime() - endDate.getTime();
+            if (difference > -1000 && difference < 1000) {
                 workerIterator.remove();
+
             }
         }
     }
-
 
     @Override
     public void removeAnyByStartDate(LocalDate startDate) {

@@ -5,15 +5,16 @@ import com.sun.xml.internal.fastinfoset.algorithm.UUIDEncodingAlgorithm;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.Date;
 
 
-public class Worker {
+public class Worker  {
     private final long max = 100000;
-    private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    private String name; //Поле не может быть null, Строка не может быть пустой
+    private long id;
+    private String name;
     private Coordinates coordinates;
-    private java.time.LocalDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    private java.time.LocalDateTime creationDate;
     private Integer salary;
     private java.time.LocalDate startDate;
     private java.util.Date endDate;
@@ -54,6 +55,7 @@ public class Worker {
                 '}';
     }
 
+
     public long getId() {
         return id;
     }
@@ -65,6 +67,9 @@ public class Worker {
     public void setName(String name) {
         if(name == null) {
             throw new NullPointerException("Can't be null");
+        }
+        if(name == " ") {
+            throw new IllegalArgumentException("Can't be empty");
         }
         this.name = name;
     }
@@ -137,6 +142,7 @@ public class Worker {
     public void setPerson(Person person) {
         this.person = person;
     }
+
 
 
 }

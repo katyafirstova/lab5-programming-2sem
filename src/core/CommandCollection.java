@@ -17,7 +17,7 @@ public enum CommandCollection {
     HISTORY("history", "вывод последних 14 команд"),
     REMOVE_ALL_BY_END_DATE("removeEndDate", "удаление из коллекции всех элементов, значение поля " +
             "endDate которого эквивалентно заданному"),
-    REMOVE_ALL_BY_START_DATE("removeStartDate", "удаление из коллекции одного элемента, " +
+    REMOVE_ALL_BY_START_DATE("removeStartDate", "удаление из коллекции элемента, " +
             "значение поля startDate которого эквивалентно заданному"),
     PRINT_FIELD_DESCENDING_END_DATE("printEndDate",  "вывод значения поля endDate всех элементов" +
             " в порядке убывания"),
