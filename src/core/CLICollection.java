@@ -23,8 +23,7 @@ public class CLICollection {
 
     public void analyse(String cmd) {
 
-
-        switch (CommandCollection.fromCmd(cmd.trim())) {
+        switch (CommandCollection.fromCmd(cmd == null ? "" : cmd.trim())) {
 
             case HELP:
                 for (CommandCollection s : CommandCollection.values()) {
