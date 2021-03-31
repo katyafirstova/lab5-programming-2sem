@@ -40,7 +40,6 @@ public class CLICollection {
                 break;
 
             case INSERT:
-
                 collection.insert(createWorker());
                 addAndSaveHistory(INSERT.getCommand());
                 break;

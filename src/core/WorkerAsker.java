@@ -20,7 +20,7 @@ public class WorkerAsker {
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
         try {
             System.out.println("Введите имя:");
-            name = scanner.nextLine();
+            name = scanner.nextLine().trim();
             if (name.equals("")) {
                 throw new IllegalArgumentException("Имя не может быть пустым!");
             }

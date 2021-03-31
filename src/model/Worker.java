@@ -65,12 +65,6 @@ public class Worker  {
     }
 
     public void setName(String name) {
-        if(name == null) {
-            throw new NullPointerException("Can't be null");
-        }
-        if(name == " ") {
-            throw new IllegalArgumentException("Can't be empty");
-        }
         this.name = name;
     }
 
@@ -79,9 +73,6 @@ public class Worker  {
     }
 
     public void setCoordinates(Coordinates coordinates) {
-        if(coordinates == null) {
-            throw new NullPointerException("Can't be null");
-        }
         this.coordinates = coordinates;
     }
 
