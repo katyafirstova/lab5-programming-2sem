@@ -86,13 +86,13 @@ public class Worker  {
     }
 
     public void setSalary(Integer salary) {
-        if(salary < 0 ) {
+        if (salary < 0) {
             throw new IllegalArgumentException("Can't be less than 0");
         }
-        if(salary == null) {
+        if (salary == null) {
             throw new NullPointerException("Can't be null");
         }
-        this.salary = salary;
+
     }
 
     public LocalDate getStartDate() {
@@ -103,7 +103,6 @@ public class Worker  {
         if(startDate == null){
             throw new NullPointerException("Can't be null");
         }
-        this.startDate = startDate;
     }
 
     public void setId(long id) {
@@ -133,7 +132,4 @@ public class Worker  {
     public void setPerson(Person person) {
         this.person = person;
     }
-
-
-
 }

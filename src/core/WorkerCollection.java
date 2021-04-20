@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * {code WorkerCollection} Методы для работы с коллекцией
+ */
 
 public class WorkerCollection implements InterfaceWorkerCollection {
 
@@ -20,7 +23,9 @@ public class WorkerCollection implements InterfaceWorkerCollection {
         this.initData = LocalDateTime.now();
     }
 
-
+    /**
+     * Выводит информацию о коллекции
+     */
     @Override
     public void info() {
         System.out.println("Worker Collection properties");
@@ -29,6 +34,9 @@ public class WorkerCollection implements InterfaceWorkerCollection {
         System.out.format("Type of collection: %s\n", workers.getClass());
     }
 
+    /**
+     * Выводит все элементы коллекции
+     */
     @Override
     public void show() {
         System.out.println("___________");
@@ -38,26 +46,42 @@ public class WorkerCollection implements InterfaceWorkerCollection {
         System.out.println("===========");
     }
 
+    /**
+     * Создаёт новый элемент коллекции
+     */
     @Override
     public void insert(Worker worker) {
         workers.put(worker.getId(), worker);
     }
 
+    /**
+     * Обновляет значение элемента коллекции, id которого равен заданному
+     */
     @Override
     public void update(long id, Worker worker) {
         workers.put(id, worker);
     }
 
+    /**
+    * удаляет элемента из коллекции по ключу
+    */
     @Override
     public void removeKey(long id) {
         workers.remove(id);
     }
 
+    /**
+     * очистка коллекции
+     */
     @Override
     public void clear() {
         workers.clear();
     }
 
+    /**
+     * сохраняет коллекцию в файл
+     * @param filename : имя файла, в который будет сохранятся коллекция
+     */
     @Override
     public void save(String filename)  {
         XStream xstream = new XStream(new StaxDriver());
@@ -77,8 +101,12 @@ public class WorkerCollection implements InterfaceWorkerCollection {
     }
 
 
+    /**
+     * читает данные из xml
+     * @param filename : имя файла, из которого производится чтение
+     */
     @Override
-    public void  load(String filename){
+    public void load(String filename){
         XStream xstream = new XStream(new StaxDriver());
         Class<?>[] classes = new Class[] { Worker.class, WorkerCollection.class};
         XStream.setupDefaultSecurity(xstream);
@@ -92,13 +120,15 @@ public class WorkerCollection implements InterfaceWorkerCollection {
             this.workers = workerCollection.workers;
             this.initData = workerCollection.initData;
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        catch (Exception e) {
+            System.out.format("Ошибка чтения файла %s\nhelp: справка по доступным командам\n", filename);
         }
-
     }
 
 
+    /**
+     * удаляет все элементы коллекции, значение поля salary которых больше заданного
+     */
     @Override
     public void removeGreater(int salary) {
         Iterator<Map.Entry<Long, Worker>> workerIterator = workers.entrySet().iterator();
@@ -113,6 +143,9 @@ public class WorkerCollection implements InterfaceWorkerCollection {
     }
 
 
+    /**
+     * удаляет все элементы коллекции, значение поля salary которых меньше заданного
+     */
     @Override
     public void removeLower(int salary) {
         Iterator<Map.Entry<Long, Worker>> workerIterator = workers.entrySet().iterator();
@@ -126,6 +159,9 @@ public class WorkerCollection implements InterfaceWorkerCollection {
         }
     }
 
+    /**
+     * удаляет все элементы коллекции, значение поля endDate которых равно заданному
+     */
     @Override
     public void removeAllByEndDate(Date endDate) {
         if (endDate == null)
@@ -144,6 +180,9 @@ public class WorkerCollection implements InterfaceWorkerCollection {
         }
     }
 
+    /**
+     * удаляет все элементы коллекции, значение поля startDate которых равно заданному
+     */
     @Override
     public void removeAnyByStartDate(LocalDate startDate) {
         Iterator<Map.Entry<Long, Worker>> workerIterator = workers.entrySet().iterator();
@@ -158,6 +197,9 @@ public class WorkerCollection implements InterfaceWorkerCollection {
 
     }
 
+    /**
+     * выводит значений поля endDate всех элементов в порядке убывания
+     */
     @Override
     public void printEndDate(Date endDate) {
         ArrayList<Date> dates = new ArrayList<Date>();

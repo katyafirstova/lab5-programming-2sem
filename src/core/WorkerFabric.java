@@ -6,6 +6,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+/**
+ * {@code WorkerFabric} Создание элемента коллекции
+ */
 public class WorkerFabric {
     public static Worker create(String name, float x, Integer y, Integer salary,
                                 LocalDate startDate, Date endDate, Status status, float height, Integer weight,

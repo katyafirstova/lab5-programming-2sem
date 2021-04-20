@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 public interface InterfaceWorkerCollection {
+
     public void info();
     public void show();
     public void insert(Worker worker);

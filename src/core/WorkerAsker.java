@@ -11,8 +11,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+/**
+ * {code WorkerAsker} Заправшивание у пользователя данных для работы с коллекцией
+ */
 public class WorkerAsker {
-
 
     public String askName() {
 
@@ -208,41 +210,64 @@ public class WorkerAsker {
 
     public long askKey() {
         long key;
-        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
-        System.out.println("Введите значение ключа для удаления элемента из коллекции:");
-        key = scanner.nextLong();
-        System.out.format("Вы ввели значение: %s\n", key);
-        if (key < 0) throw new IllegalArgumentException("Значение поля не может быть меньше нуля!");
-
+        try {
+            Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+            System.out.println("Введите значение ключа для удаления элемента из коллекции:");
+            key = scanner.nextLong();
+            System.out.format("Вы ввели значение: %s\n", key);
+            if (key < 0) throw new IllegalArgumentException();
+        } catch (Exception e) {
+            System.out.println("Некорректный формат ввода");
+            return askKey();
+        }
         return key;
     }
 
     public long askId() {
         long id;
-        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
-        System.out.println("Введите значение ID:");
-        id = scanner.nextLong();
-        if (id < 0) throw new IllegalArgumentException("Значение id не может быть меньше нуля!");
 
+        try {
+            Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+            System.out.println("Введите значение ID:");
+            id = scanner.nextLong();
+            if (id < 0) throw new IllegalArgumentException();
+        } catch (Exception e) {
+            System.out.println("Некорректный формат ввода");
+            return askId();
+        }
         return id;
     }
 
     public String askFileName() {
         String name = new String();
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+
         try {
             System.out.println("Введите имя файла с расширением .xml:");
             name = scanner.nextLine();
             System.out.format("Вы ввели значение: %s\n", name);
-            if (!name.contains(".xml")) {
-                throw new IllegalArgumentException("Имя должно содержать расширение .xml!");
-            }
-
-        } catch (NoSuchElementException elementException) {
-            System.out.println("Имя не распознано!");
+            if (!name.contains(".xml")) throw new IllegalArgumentException("Имя файла должно содержать расшиение .xml");
+            if(name.length() < 5) throw new IllegalArgumentException("Введите полное имя файла:");
+        } catch (Exception e) {
+            System.out.format("Значение поля не распознано: %s\n", e.getMessage() == null ? "" : e.getMessage());
+            return null;
         }
         return name;
     }
 
+    public String askNameOfFile() {
+        String name = new String();
+        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+
+        try {
+            System.out.println("Введите имя файла:");
+            name = scanner.nextLine();
+            System.out.format("Вы ввели значение: %s\n", name);
+        } catch (Exception e) {
+            System.out.format("Значение поля не распознано: %s\n", e.getMessage() == null ? "" : e.getMessage());
+            return null;
+        }
+        return name;
+    }
 }
 

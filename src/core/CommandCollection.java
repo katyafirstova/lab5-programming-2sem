@@ -1,5 +1,8 @@
 package core;
 
+/**
+ * {@code СommandCollection} Названия и описания команд
+ */
 public enum CommandCollection {
 
     HELP("help", "справка по доступным командам"),
@@ -33,13 +36,23 @@ public enum CommandCollection {
 
 
     public static CommandCollection fromCmd(String cmd) {
-        for (CommandCollection s : CommandCollection.values()) {
-            if (cmd != null && cmd.equals(s.getCommand())) {
-                return s;
+        if (cmd != null) {
+            String[] arrayCmd = cmd.split(" ");
+            for (CommandCollection s : CommandCollection.values()) {
+                String[] arrayCommand = s.getCommand().split(" ");
+                if(arrayCommand.length == 1 && arrayCmd[0].equals(arrayCommand[0])) {
+                    return s;
+                }
+                if(arrayCommand.length == 2 && arrayCmd[0].equals(arrayCommand[0])
+                        && arrayCmd[1].equals(arrayCommand[1])) {
+                    return s;
+                }
             }
         }
         return CommandCollection.UNKNOWN;
     }
+
+
 
     public String getCommand() {
         return command;

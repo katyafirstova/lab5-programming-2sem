@@ -5,12 +5,15 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 import model.Color;
 import model.Status;
 import model.Worker;
-
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
 import static core.CommandCollection.*;
+
+/**
+ * {@code CLICollection} Организация интерфейса командной строки
+ */
 
 public class CLICollection {
     private WorkerCollection collection;
@@ -57,7 +60,9 @@ public class CLICollection {
 
             case SAVE:
                 String filename = createFilename();
-                collection.save(filename);
+                if(filename != null) {
+                    collection.save(filename);
+                }
                 addAndSaveHistory(SAVE.getCommand());
                 break;
 
@@ -116,23 +121,36 @@ public class CLICollection {
         }
     }
 
+    /**
+     * {@code executeScript} Выполняет скрипт из заданного файла
+     */
     private void executeScript() {
         XStream xstream = new XStream(new StaxDriver());
         XStream.setupDefaultSecurity(xstream);
-
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("history.xml"));
-            ArrayList<String> script = (ArrayList<String>) xstream.fromXML(reader);
-            for (int i = 0; i < script.size(); i++) {
-                analyse(script.get(i));
+            WorkerAsker workerAsker = new WorkerAsker();
+            String filename = workerAsker.askNameOfFile();
+            if (filename != null) {
+                BufferedReader reader = new BufferedReader(new FileReader(filename));
+                ArrayList<String> script = new ArrayList<String>();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    script.add(line);
+                    for (int i = 0; i < script.size(); i++) {
+                        analyse(script.get(i));
+                    }
+                }
+
+
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
+        /**
+     * {@code showHistory} Вывод истории использованных команд
+     */
     private void showHistory() {
         for (int i = 0; i < history.size(); i++) {
             String hist = history.get(i);
@@ -143,14 +161,16 @@ public class CLICollection {
         }
     }
 
+    /**
+     * {@code addAndSaveHistory} Сохранение истории команд в файл в формате xml
+     */
     private void addAndSaveHistory(String command) {
         history.add(command);
         XStream xstream = new XStream(new StaxDriver());
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("history.xml"));
             xstream.toXML(history, writer);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -190,6 +210,9 @@ public class CLICollection {
         return workerAsker.askId();
     }
 
+    /**
+     * {@code сreateWorker} Создание элемента коллекции
+     */
     private Worker createWorker() {
 
         WorkerAsker workerAsker = new WorkerAsker();
@@ -203,25 +226,34 @@ public class CLICollection {
         int salary = workerAsker.askSalary();
         LocalDate newStartDate = workerAsker.askStartDate();
         Date newEndDate = workerAsker.askEndDate();
-        Worker worker = WorkerFabric.create(name, x, y, salary,  newStartDate, newEndDate, status, height, weight, color);
+        Worker worker = WorkerFabric.create(name, x, y, salary, newStartDate, newEndDate, status, height, weight, color);
         System.out.format("Создан элемент коллекции: %s\n", worker);
 
         return worker;
     }
-
-    private String createFilename() {
+    /**
+     * {@code createFilename} создание имя файла
+     */
+    private String createFilename()  {
         WorkerAsker workerAsker = new WorkerAsker();
-
-        return workerAsker.askFileName();
+        String filename = workerAsker.askFileName();
+        if(filename != null && new File(filename).isFile()) {
+            return filename;
+        }
+        System.out.println("Некорректное имя файла");
+        return null;
     }
 
     private Worker getWorker() {
         return new Worker();
     }
 
+    /**
+     * {@code start} Считывание и анализ вводимой пользователем строки
+     */
     public void start() {
 
-        for (; ; ) {
+        for (; ;) {
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
                 String line = bufferedReader.readLine();
@@ -231,11 +263,10 @@ public class CLICollection {
                 e.printStackTrace();
             }
 
-
         }
     }
+}
 
-    }
 
 
 
